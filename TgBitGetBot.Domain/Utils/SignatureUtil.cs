@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace TgBitGetBot.App.Utils;
+namespace TgBitGetBot.Domain.Utils;
 
 public class SignatureUtil
 {

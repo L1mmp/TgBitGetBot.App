@@ -2,5 +2,5 @@
 
 public interface ITickerService
 {
-	public string GetTopTickers();
+	public Task<string> GetTopTickers();
 }

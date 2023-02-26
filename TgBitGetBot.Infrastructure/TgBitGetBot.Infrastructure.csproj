@@ -19,4 +19,10 @@
 	  <ProjectReference Include="..\TgBitGetBot.Domain\TgBitGetBot.Domain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Reference Include="RestSharp">
+	    <HintPath>..\..\..\..\.nuget\packages\restsharp\108.0.3\lib\net6.0\RestSharp.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
 </Project>
