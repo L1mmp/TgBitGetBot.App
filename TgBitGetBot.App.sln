@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TgBitGetBot.App", "TgBitGetBot.App\TgBitGetBot.App.csproj", "{EDE05EFC-8CFA-411C-A6CE-A467A0BD4539}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B737C1ED-139D-461E-BD33-E7E59E6573B8} = {B737C1ED-139D-461E-BD33-E7E59E6573B8}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBitGetBot.DataAccess", "TgBitGetBot.DataAccess\TgBitGetBot.DataAccess.csproj", "{C8D39A2E-6D7E-42FA-BFE5-16A1D6E47974}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F7FC7AC4-4146-45BC-A464-C9FA99FF11D3} = {F7FC7AC4-4146-45BC-A464-C9FA99FF11D3}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBitGetBot.Domain", "TgBitGetBot.Domain\TgBitGetBot.Domain.csproj", "{F7FC7AC4-4146-45BC-A464-C9FA99FF11D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBitGetBot.Infrastructure", "TgBitGetBot.Infrastructure\TgBitGetBot.Infrastructure.csproj", "{B737C1ED-139D-461E-BD33-E7E59E6573B8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C8D39A2E-6D7E-42FA-BFE5-16A1D6E47974} = {C8D39A2E-6D7E-42FA-BFE5-16A1D6E47974}
+		{F7FC7AC4-4146-45BC-A464-C9FA99FF11D3} = {F7FC7AC4-4146-45BC-A464-C9FA99FF11D3}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EDE05EFC-8CFA-411C-A6CE-A467A0BD4539}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDE05EFC-8CFA-411C-A6CE-A467A0BD4539}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDE05EFC-8CFA-411C-A6CE-A467A0BD4539}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDE05EFC-8CFA-411C-A6CE-A467A0BD4539}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8D39A2E-6D7E-42FA-BFE5-16A1D6E47974}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8D39A2E-6D7E-42FA-BFE5-16A1D6E47974}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8D39A2E-6D7E-42FA-BFE5-16A1D6E47974}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8D39A2E-6D7E-42FA-BFE5-16A1D6E47974}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7FC7AC4-4146-45BC-A464-C9FA99FF11D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7FC7AC4-4146-45BC-A464-C9FA99FF11D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7FC7AC4-4146-45BC-A464-C9FA99FF11D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7FC7AC4-4146-45BC-A464-C9FA99FF11D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B737C1ED-139D-461E-BD33-E7E59E6573B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B737C1ED-139D-461E-BD33-E7E59E6573B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B737C1ED-139D-461E-BD33-E7E59E6573B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B737C1ED-139D-461E-BD33-E7E59E6573B8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {664331CE-970D-4FAB-AA50-2102E0829C0D}
+	EndGlobalSection
+EndGlobal
