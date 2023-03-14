@@ -11,5 +11,5 @@ public class UserApiInfo
 	public string Token { get; set; }
 	public string Passphrase { get; set; }
 	public User User { get; set; }
-	public long UserId { get; set; }
+	public Guid UserId { get; set; }
 }

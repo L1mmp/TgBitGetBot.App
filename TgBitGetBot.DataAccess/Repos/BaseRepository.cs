@@ -35,9 +35,13 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
 		return addedEntity;
 	}
 
-	public async Task DeleteByIdAsync(Guid id)
+	public async Task<EntityEntry<TEntity>> DeleteByIdAsync(Guid id)
 	{
-		_dbSet.Remove(await GetByIdAsync(id));
+		var deltedEntity = _dbSet.Remove(await GetByIdAsync(id));
+
+		await _dbContext.SaveChangesAsync();
+
+		return deltedEntity;
 	}
 
 	public async Task<IEnumerable<TEntity>> GetAllAsync()
