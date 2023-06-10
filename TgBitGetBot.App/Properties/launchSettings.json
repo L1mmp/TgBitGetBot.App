@@ -5,6 +5,16 @@
       "environmentVariables": {
         "token": "5835418871:AAEryhASdTdAJTYpphB_OThq3-jdtWX-t1g"
       }
+    },
+    "Docker": {
+      "commandName": "Docker"
+    },
+    "WSL": {
+      "commandName": "WSL2",
+      "environmentVariables": {
+        "token": "5835418871:AAEryhASdTdAJTYpphB_OThq3-jdtWX-t1g"
+      },
+      "distributionName": ""
     }
   }
 }

@@ -12,7 +12,6 @@
 	  <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
 	  <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
 	  <PackageReference Include="NCrontab.Signed" Version="3.3.2" />
-	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	  <PackageReference Include="Telegram.Bot" Version="19.0.0" />
 	</ItemGroup>
 
@@ -21,11 +20,4 @@
 	  <ProjectReference Include="..\TgBitGetBot.DataAccess\TgBitGetBot.DataAccess.csproj" />
 	  <ProjectReference Include="..\TgBitGetBot.Domain\TgBitGetBot.Domain.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Reference Include="RestSharp">
-	    <HintPath>..\..\..\..\.nuget\packages\restsharp\108.0.3\lib\net6.0\RestSharp.dll</HintPath>
-	  </Reference>
-	</ItemGroup>
-
 </Project>

@@ -68,13 +68,24 @@ var host = Host.CreateDefaultBuilder()
 	.UseSerilog()
 	.Build();
 
-await host.StartAsync();
+//using (var scope = host.Services.CreateScope())
+//{
+//	var services = scope.ServiceProvider;
+
+//	var context = services.GetRequiredService<ApplicationDbContext>();
+//	if (context.Database.GetPendingMigrations().Any())
+//	{
+//		context.Database.Migrate();
+//	}
+//}
+
+await host.StartAsync().ConfigureAwait(false);
 
 var telegramMessageListener = host.Services.GetRequiredService<ITelegramMessageListener>();
 
 await telegramMessageListener.StartListening();
 
-await host.WaitForShutdownAsync();
+await host.WaitForShutdownAsync().ConfigureAwait(false);
 
 
 static void BuildConfig(IConfigurationBuilder builder)
