@@ -1,7 +1,7 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace TgBitGetBot.Infrastructure.CommandRouter;
+namespace TgBitGetBot.Application.CommandRouter.Interface;
 
 public interface ICommandRouter
 {

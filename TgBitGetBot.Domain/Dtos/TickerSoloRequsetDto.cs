@@ -1,8 +1,15 @@
+using System.Text.Json.Serialization;
+
 namespace TgBitGetBot.Domain.Dtos;
 
 public class TickerSoloRequsetDto
 {
-    public string code { get; set; }
-    public string msg { get; set; }
-    public TickerDto data { get; set; }
+    [JsonPropertyName("code")]
+    public string? Code { get; set; }
+
+	[JsonPropertyName("msg")]
+	public string? Msg { get; set; }
+
+	[JsonPropertyName("data")]
+	public TickerDto? Data { get; set; }
 }

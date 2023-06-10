@@ -1,33 +1,34 @@
-﻿using System;
+﻿using EasyCaching.Core;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using TgBitGetBot.Infrastructure.Services.Interfaces;
+using TgBitGetBot.Application.Command.Interface;
+using TgBitGetBot.Application.Factories.Interface;
+using TgBitGetBot.Application.Services.Interfaces;
+using TgBitGetBot.Infrastructure.Services;
 
 namespace TgBitGetBot.Infrastructure.Commands
 {
-	internal class GetTopTickersByDepthCommand : ICommand
+	public class GetTopTickersByDepthCommand : ICommand
 	{
-		private readonly ITickerService _tickerService;
-		private readonly Message _message;
-		private readonly ITelegramBotClient _botClient;
+		private readonly IEasyCachingProvider _provider;
 
-		public GetTopTickersByDepthCommand(ITickerService tickerService, Message message, ITelegramBotClient botClient)
+		public GetTopTickersByDepthCommand(IEasyCachingProvider provider)
 		{
-			_tickerService = tickerService;
-			_message = message;
-			_botClient = botClient;
+			_provider = provider;
 		}
-		public async Task Execute()
+		public async Task Execute(Message message, ITelegramBotClient botClient)
 		{
 			using CancellationTokenSource cts = new();
-			var topString = await _tickerService.GetTopTickers();
+			var topString = await _provider.GetAsync<string>("topTickers");
 
-			var message = await _botClient.SendTextMessageAsync(
-				chatId: _message.Chat.Id,
+			var _message = await botClient.SendTextMessageAsync(
+				chatId: message.Chat.Id,
 				text: $"{topString}",
 				cancellationToken: cts.Token);
 		}

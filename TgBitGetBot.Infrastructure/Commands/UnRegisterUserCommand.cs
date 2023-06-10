@@ -1,32 +1,29 @@
-﻿using Telegram.Bot;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Telegram.Bot;
 using Telegram.Bot.Types;
+using TgBitGetBot.Application.Command.Interface;
+using TgBitGetBot.Application.Factories.Interface;
+using TgBitGetBot.Application.Services.Interfaces;
 using TgBitGetBot.Domain.Dtos;
-using TgBitGetBot.Infrastructure.Services.Interfaces;
 
 namespace TgBitGetBot.Infrastructure.Commands;
 
 public class UnRegisterUserCommand : ICommand
 {
 	private readonly IUserService _userService;
-	private readonly Message _message;
-	private readonly ITelegramBotClient _botClient;
-
-	public UnRegisterUserCommand(IUserService userService, Message message, ITelegramBotClient botClient)
+	public UnRegisterUserCommand(IUserService userService)
 	{
 		_userService = userService;
-		_message = message;
-		_botClient = botClient;
 	}
-
-	public async Task Execute()
+	public async Task Execute(Message message, ITelegramBotClient botClient)
 	{
 		using CancellationTokenSource cts = new();
-		var sendMessage = await _userService.RemoveUserById(_message.Chat.Id)
+		var sendMessage = await _userService.RemoveUserById(message.Chat.Id)
 			? "Пользователь успешно удален."
 			: "Пользователь не зарегистрирован в системе.";
 
-		var message = await _botClient.SendTextMessageAsync(
-			chatId: _message.Chat.Id,
+		var _message = await botClient.SendTextMessageAsync(
+			chatId: message.Chat.Id,
 			text: sendMessage,
 			cancellationToken: cts.Token);
 	}

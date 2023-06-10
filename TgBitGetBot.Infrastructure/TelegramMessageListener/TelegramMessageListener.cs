@@ -1,50 +1,46 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using TgBitGetBot.Domain.Dtos;
-using TgBitGetBot.Infrastructure.CommandRouter;
-using TgBitGetBot.Infrastructure.Services;
-using TgBitGetBot.Infrastructure.Services.Interfaces;
+using TgBitGetBot.Application.CommandRouter.Interface;
+using TgBitGetBot.Application.Services.Interfaces;
+using TgBitGetBot.Application.TelegramMessageListener.Interface;
 
 namespace TgBitGetBot.Infrastructure.TelegramMessageListener;
 
 public class TelegramMessageListener : ITelegramMessageListener
 {
-	private readonly ILogger<TelegramMessageListener> _logger;
-	private readonly IConfiguration _config;
-	private readonly ITickerService _tickerService;
-	private readonly IUserService _userService;
+	private readonly ILogger _logger;
 	private readonly ICommandRouter _router;
 
-
 	public TelegramMessageListener(
-		ILogger<TelegramMessageListener> logger, 
-		IConfiguration config, 
-		ITickerService tickerService, 
-		IUserService userService,
+		ILoggerFactory loggerFactory,
 		ICommandRouter router)
 	{
-		_logger = logger;
-		_config = config;
-		_tickerService = tickerService;
-		_userService = userService;
+		_logger = loggerFactory.CreateLogger<TelegramMessageListener>();
 		_router = router;
 	}
 
 	public async Task StartListening()
 	{
-		var botClient = new TelegramBotClient(Environment.GetEnvironmentVariable("token"));
+		var token = Environment.GetEnvironmentVariable("token");
+
+		if (token is null)
+		{
+			_logger.LogError("Token is not set in enviroment or incorrect");
+		}
+
+		var botClient = new TelegramBotClient(token!);
 
 		using CancellationTokenSource cts = new();
 
-		// StartReceiving does not block the caller thread. Receiving is done on the ThreadPool.
 		ReceiverOptions receiverOptions = new()
 		{
-			AllowedUpdates = Array.Empty<UpdateType>() // receive all update types
+			AllowedUpdates = Array.Empty<UpdateType>()
 		};
 
 		botClient.StartReceiving(
@@ -59,15 +55,16 @@ public class TelegramMessageListener : ITelegramMessageListener
 		Console.WriteLine($"Start listening for @{me.Username}");
 		Console.ReadLine();
 
-		// Send cancellation request to stop bot
 		cts.Cancel();
 	}
 
 	public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
 	{
-		await _router.ExecuteCommand(update.Message, botClient);
+		await _router.ExecuteCommand(update.Message!, botClient);
 
-		_logger.LogInformation($"Received a '{update.Message.Text}' message in chat {update.Message.Chat.Id}.");
+		_logger.LogInformation("Received a '{text}' message in chat {chatId}.", 
+			update.Message!.Text, 
+			update.Message.Chat.Id);
 
 	}
 

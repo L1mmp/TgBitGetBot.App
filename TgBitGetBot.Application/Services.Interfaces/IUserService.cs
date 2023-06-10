@@ -1,7 +1,7 @@
 ﻿using TgBitGetBot.Domain.Dtos;
 using TgBitGetBot.Domain.Entities;
 
-namespace TgBitGetBot.Infrastructure.Services.Interfaces;
+namespace TgBitGetBot.Application.Services.Interfaces;
 
 public interface IUserService
 {

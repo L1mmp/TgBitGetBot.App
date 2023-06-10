@@ -1,38 +1,36 @@
-﻿using Telegram.Bot;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Telegram.Bot;
 using Telegram.Bot.Types;
+using TgBitGetBot.Application.Command.Interface;
+using TgBitGetBot.Application.Factories.Interface;
+using TgBitGetBot.Application.Services.Interfaces;
 using TgBitGetBot.Domain.Dtos;
-using TgBitGetBot.Infrastructure.Services.Interfaces;
 
 namespace TgBitGetBot.Infrastructure.Commands;
 
 public class RegisterUserCommand : ICommand
 {
 	private readonly IUserService _userService;
-	private readonly Message _message;
-	private readonly ITelegramBotClient _botClient;
-
-	public RegisterUserCommand(IUserService userService, Message message, ITelegramBotClient botClient)
+	public RegisterUserCommand(IUserService userService)
 	{
 		_userService = userService;
-		_message = message;
-		_botClient = botClient;
 	}
 
-	public async Task Execute()
+	public  async Task Execute(Message message, ITelegramBotClient botClient)
 	{
 		using CancellationTokenSource cts = new();
 		var user = new UserDto()
 		{
-			TelegramId = _message.Chat.Id,
-			Name = _message.Chat.Username
+			TelegramId = message.Chat.Id,
+			Name = message.Chat.Username
 		};
 
 		var sendMessage = await _userService.AddUser(user)
 			? "Пользователь успешно зарегистрирован."
 			: "Пользователь уже существует.";
 
-		var message = await _botClient.SendTextMessageAsync(
-			chatId: _message.Chat.Id,
+		var _message = await botClient.SendTextMessageAsync(
+			chatId: message.Chat.Id,
 			text: sendMessage,
 			cancellationToken: cts.Token);
 	}

@@ -8,18 +8,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TgBitGetBot.App", "TgBitGet
 		{B737C1ED-139D-461E-BD33-E7E59E6573B8} = {B737C1ED-139D-461E-BD33-E7E59E6573B8}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBitGetBot.DataAccess", "TgBitGetBot.DataAccess\TgBitGetBot.DataAccess.csproj", "{C8D39A2E-6D7E-42FA-BFE5-16A1D6E47974}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TgBitGetBot.DataAccess", "TgBitGetBot.DataAccess\TgBitGetBot.DataAccess.csproj", "{C8D39A2E-6D7E-42FA-BFE5-16A1D6E47974}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F7FC7AC4-4146-45BC-A464-C9FA99FF11D3} = {F7FC7AC4-4146-45BC-A464-C9FA99FF11D3}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBitGetBot.Domain", "TgBitGetBot.Domain\TgBitGetBot.Domain.csproj", "{F7FC7AC4-4146-45BC-A464-C9FA99FF11D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TgBitGetBot.Domain", "TgBitGetBot.Domain\TgBitGetBot.Domain.csproj", "{F7FC7AC4-4146-45BC-A464-C9FA99FF11D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBitGetBot.Infrastructure", "TgBitGetBot.Infrastructure\TgBitGetBot.Infrastructure.csproj", "{B737C1ED-139D-461E-BD33-E7E59E6573B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TgBitGetBot.Infrastructure", "TgBitGetBot.Infrastructure\TgBitGetBot.Infrastructure.csproj", "{B737C1ED-139D-461E-BD33-E7E59E6573B8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C8D39A2E-6D7E-42FA-BFE5-16A1D6E47974} = {C8D39A2E-6D7E-42FA-BFE5-16A1D6E47974}
 		{F7FC7AC4-4146-45BC-A464-C9FA99FF11D3} = {F7FC7AC4-4146-45BC-A464-C9FA99FF11D3}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBitGetBot.Application", "TgBitGetBot.Application\TgBitGetBot.Application.csproj", "{A77DDE91-ACCD-414E-9263-ECCA3F597D3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{B737C1ED-139D-461E-BD33-E7E59E6573B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B737C1ED-139D-461E-BD33-E7E59E6573B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B737C1ED-139D-461E-BD33-E7E59E6573B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A77DDE91-ACCD-414E-9263-ECCA3F597D3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A77DDE91-ACCD-414E-9263-ECCA3F597D3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A77DDE91-ACCD-414E-9263-ECCA3F597D3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A77DDE91-ACCD-414E-9263-ECCA3F597D3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

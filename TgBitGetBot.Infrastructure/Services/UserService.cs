@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
+using TgBitGetBot.Application.Services.Interfaces;
 using TgBitGetBot.DataAccess.Repos.Interfaces;
 using TgBitGetBot.Domain.Dtos;
 using TgBitGetBot.Domain.Entities;
-using TgBitGetBot.Infrastructure.Services.Interfaces;
 
 namespace TgBitGetBot.Infrastructure.Services;
 
 public class UserService : IUserService
 {
-	private IMapper _mapper;
-	private IUserRepository _userRepository;
-	private ILogger<UserService> _logger;
+	private readonly IMapper _mapper;
+	private readonly IUserRepository _userRepository;
+	private readonly ILogger<UserService> _logger;
 
 	public UserService(IMapper mapper, IUserRepository userRepository, ILogger<UserService> logger)
 	{
@@ -31,13 +31,13 @@ public class UserService : IUserService
 				var result = await _userRepository.AddAsync(user);
 
 				_logger.Log(LogLevel.Information,
-					$"Created {nameof(result.Entity)} with Id: {result.Entity.Id} ");
+					"Created {entity} with Id: {id}", nameof(result.Entity), result.Entity.Id);
 
 				return true;
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
-				_logger.LogError($"{e.Message} {e.StackTrace}");
+				_logger.LogError("Error: {message}\nStack trace: {stackTrace}", ex.Message, ex.StackTrace);
 				return false;
 			}
 		}
@@ -59,7 +59,7 @@ public class UserService : IUserService
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"{ex.Message} {ex.StackTrace}");
+				_logger.LogError("Error: {message}\nStack trace: {stackTrace}", ex.Message , ex.StackTrace);
 
 				return false;
 			}
@@ -70,6 +70,6 @@ public class UserService : IUserService
 
 	private async ValueTask<bool> CheckIfUserExists(User user)
 	{
-		return ((await _userRepository.GetByConditionAsync(x => x.TelegramId == user.TelegramId)).Count() > 0);
+		return (await _userRepository.GetByConditionAsync(x => x.TelegramId == user.TelegramId)).Any();
 	}
 }

@@ -2,16 +2,27 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TgBitGetBot.DataAccess;
 using TgBitGetBot.Domain.MappingProfiles;
 using TgBitGetBot.Infrastructure.Services;
-using TgBitGetBot.Infrastructure.Services.Interfaces;
 using TgBitGetBot.Infrastructure.TelegramMessageListener;
-using TgBitGetBot.DataAccess.Repos.Interfaces;
 using TgBitGetBot.DataAccess.Repos;
 using TgBitGetBot.Infrastructure.CommandRouter;
+using TgBitGetBot.Infrastructure.Workers;
+using TgBitGetBot.Domain.Confgis;
+using TgBitGetBot.Application.Services.Interfaces;
+using TgBitGetBot.Application.CommandRouter.Interface;
+using TgBitGetBot.Application.TelegramMessageListener.Interface;
+using TgBitGetBot.DataAccess.Repos.Interfaces;
+using TgBitGetBot.Application.Factories.Interface;
+using TgBitGetBot.Infrastructure.Factories;
+using Microsoft.Extensions.Logging;
+using System.ComponentModel;
+using TgBitGetBot.Application.Command.Interface;
+using TgBitGetBot.Infrastructure.Commands;
+using Microsoft.Extensions.Http;
+using TgBitGetBot.Domain.Consts;
 
 var builder = new ConfigurationBuilder();
 BuildConfig(builder);
@@ -22,21 +33,48 @@ var configuration = builder.Build();
 var host = Host.CreateDefaultBuilder()
 	.ConfigureServices((context, services) =>
 	{
+		services.Configure<EasyCacheConfigs>(configuration.GetSection("easycaching"));
+
+		services.AddEasyCaching(options =>
+		{
+			//use memory cache
+			options.UseInMemory(context.Configuration);
+		});
+
 		services.AddAutoMapper(typeof(TickerDtoToModelProfile), typeof(DtoToEntitesProfile));
 		services.AddDbContext<ApplicationDbContext>(opt =>
 			opt.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection")));
-		services.AddTransient<ITelegramMessageListener, TelegramMessageListener>();
+
 		services.AddTransient<ITickerService, TickerService>();
 		services.AddTransient<IUserService, UserService>();
 		services.AddTransient<IUserRepository, UserRepository>();
+		services.AddTransient<IUserStateRepository, UserStateRepository>();
 		services.AddTransient<ICommandRouter, CommandRouter>();
+		services.AddTransient<IUserApiInfoService, UserApiInfoService>();
+		services.AddTransient<IUserApiInfoRepository, UserApiInfoRepository>();
+		services.AddSingleton<ITelegramMessageListener, TelegramMessageListener>();
+		services.AddTransient<ICommand, RegisterUserCommand>();
+		services.AddTransient<ICommand, UnRegisterUserCommand>();
+		services.AddTransient<ICommand, RegisterUserCommand>();
+		services.AddTransient<ICommand, GetTopTickersByDepthCommand>();
 
+		services.AddHttpClient(HttpClientConstNames.BitGetApiName, client =>
+		{
+			client.BaseAddress = new Uri(ApiRouteConsts.ApiRoute);
+		});
+
+		services.AddHostedService<TopTickersWorker>();
 	})
 	.UseSerilog()
 	.Build();
 
-var svc = ActivatorUtilities.CreateInstance<TelegramMessageListener>(host.Services);
-await svc.StartListening();
+await host.StartAsync();
+
+var telegramMessageListener = host.Services.GetRequiredService<ITelegramMessageListener>();
+
+await telegramMessageListener.StartListening();
+
+await host.WaitForShutdownAsync();
 
 
 static void BuildConfig(IConfigurationBuilder builder)

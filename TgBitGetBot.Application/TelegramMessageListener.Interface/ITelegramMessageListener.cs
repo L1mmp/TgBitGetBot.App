@@ -1,7 +1,7 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace TgBitGetBot.Infrastructure.TelegramMessageListener;
+namespace TgBitGetBot.Application.TelegramMessageListener.Interface;
 
 public interface ITelegramMessageListener
 {
