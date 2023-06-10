@@ -2,7 +2,6 @@
 using System.Text;
 using Newtonsoft.Json;
 using AutoMapper;
-using RestSharp;
 using TgBitGetBot.Domain.Consts;
 using TgBitGetBot.Domain.Dtos;
 using TgBitGetBot.Domain.Models;

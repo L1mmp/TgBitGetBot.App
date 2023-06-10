@@ -1,0 +1,23 @@
+version: '1'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      - token=5835418871:AAEryhASdTdAJTYpphB_OThq3-jdtWX-t1g
+      - ConnectionStrings__Default=Server=db;Database=TgBitGetBotDb;User=sa;Password=YourPassword
+    networks:
+      - appnet
+    command: ["dotnet", "ef", "database update"]
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - SA_PASSWORD=YourPassword
+      - ACCEPT_EULA=Y
+    networks:
+      - appnet
+networks:
+  appnet:
