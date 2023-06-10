@@ -9,7 +9,7 @@ public interface IBaseRepository<TEntity> where TEntity : class
 	public Task<TEntity> GetByIdAsync(Guid id);
 	public Task<IEnumerable<TEntity>> GetByConditionAsync(Expression<Func<TEntity, bool>> predicate);
 	public Task<IEnumerable<TEntity>> GetAllAsync();
-	public Task DeleteByIdAsync(Guid id);
+	public Task<EntityEntry<TEntity>> DeleteByIdAsync(Guid id);
 	public Task UpdateAsync(TEntity entity);
 	public IEnumerable<TEntity> GetWithInclude(params Expression<Func<TEntity, object>>[] includeProperties);
 	public IEnumerable<TEntity> GetWithInclude(Func<TEntity, bool> predicate, params Expression<Func<TEntity, object>>[] includeProperties);

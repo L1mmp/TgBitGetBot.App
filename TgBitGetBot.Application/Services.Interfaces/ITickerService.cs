@@ -1,4 +1,4 @@
-﻿namespace TgBitGetBot.Infrastructure.Services.Interfaces;
+﻿namespace TgBitGetBot.Application.Services.Interfaces;
 
 public interface ITickerService
 {

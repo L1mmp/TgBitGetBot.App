@@ -1,5 +1,7 @@
-﻿namespace TgBitGetBot.DataAccess.Repos.Interfaces;
+﻿using TgBitGetBot.Domain.Entities;
 
-public interface IUserApiInfoRepository
+namespace TgBitGetBot.DataAccess.Repos.Interfaces;
+
+public interface IUserApiInfoRepository : IBaseRepository<UserApiInfo>
 {
 }

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "TgBitGetBot.App": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "token": "5835418871:AAEryhASdTdAJTYpphB_OThq3-jdtWX-t1g"
+      }
+    }
+  }
+}
