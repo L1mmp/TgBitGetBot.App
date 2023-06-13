@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TgBitGetBot.Infrastructure"
 		{F7FC7AC4-4146-45BC-A464-C9FA99FF11D3} = {F7FC7AC4-4146-45BC-A464-C9FA99FF11D3}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBitGetBot.Application", "TgBitGetBot.Application\TgBitGetBot.Application.csproj", "{A77DDE91-ACCD-414E-9263-ECCA3F597D3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TgBitGetBot.Application", "TgBitGetBot.Application\TgBitGetBot.Application.csproj", "{A77DDE91-ACCD-414E-9263-ECCA3F597D3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

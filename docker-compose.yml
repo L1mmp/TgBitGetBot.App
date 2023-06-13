@@ -1,4 +1,7 @@
-version: '1'
+version: '3'
+networks:
+  app:
+   driver: bridge
 services:
   app:
     build:
@@ -7,17 +10,25 @@ services:
     depends_on:
       - db
     environment:
-      - token=5835418871:AAEryhASdTdAJTYpphB_OThq3-jdtWX-t1g
-      - ConnectionStrings__Default=Server=db;Database=TgBitGetBotDb;User=sa;Password=YourPassword
+      - token=5835418871:AAFOu-QztCkR0dqqR5RsnoVWxBtmnSMvFEU
     networks:
-      - appnet
-    command: ["dotnet", "ef", "database update"]
+      - app
+    ports:
+      - '80:80'
   db:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: postgres
+    image: postgres:latest
+    restart: always
     environment:
-      - SA_PASSWORD=YourPassword
-      - ACCEPT_EULA=Y
+      - POSTGRES_DB=TgBitGetBotDb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
     networks:
-      - appnet
-networks:
-  appnet:
+      - app
+volumes:
+  db:
+    driver: local

@@ -14,6 +14,7 @@ namespace TgBitGetBot.Domain.MappingProfiles
 		public DtoToEntitesProfile()
 		{
 			CreateMap<User, UserDto>().ReverseMap();
+			CreateMap<UserApiInfo, UserApiInfoDto>().ReverseMap();
 		}
 	}
 }

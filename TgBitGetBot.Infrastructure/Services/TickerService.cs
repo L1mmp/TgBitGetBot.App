@@ -41,7 +41,7 @@ public class TickerService : ITickerService
 			return "Top tickers not found";
 		}
 
-		var usdtTopDepth = topTickers.Data.Where(x => x.Symbol!.EndsWith("USDT"));
+		var usdtTopDepth = topTickers.Data!.Where(x => x.Symbol!.EndsWith("USDT"));
 
 		var listTickers = _mapper.Map<List<TickerModel>>(usdtTopDepth);
 

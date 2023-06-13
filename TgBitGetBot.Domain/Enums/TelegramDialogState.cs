@@ -2,9 +2,10 @@
 {
 	public enum TelegramDialogState
 	{
+		DefaultSatate,
+		WaitingForCommand,
 		WaitingForToken,
 		WaitingForPassphrace
-
 	}
 
 }

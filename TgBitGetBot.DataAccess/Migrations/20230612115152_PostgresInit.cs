@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TgBitGetBot.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class PostgresInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,8 +15,8 @@ namespace TgBitGetBot.DataAccess.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
                     TelegramId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -25,13 +25,27 @@ namespace TgBitGetBot.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserStates",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    TelegramId = table.Column<long>(type: "bigint", nullable: false),
+                    State = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserStates", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserApiInfos",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Passphrase = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Token = table.Column<string>(type: "text", nullable: true),
+                    Passphrase = table.Column<string>(type: "text", nullable: true),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,6 +69,9 @@ namespace TgBitGetBot.DataAccess.Migrations
         {
             migrationBuilder.DropTable(
                 name: "UserApiInfos");
+
+            migrationBuilder.DropTable(
+                name: "UserStates");
 
             migrationBuilder.DropTable(
                 name: "Users");

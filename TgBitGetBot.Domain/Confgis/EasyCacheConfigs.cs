@@ -9,7 +9,7 @@ namespace TgBitGetBot.Domain.Confgis
 		/// <summary>
 		/// Корневой адрес
 		/// </summary>
-		public InMemoryConfig inmemory { get; set; }
+		public InMemoryConfig? inmemory { get; set; }
 	}
 
 	/// <summary>

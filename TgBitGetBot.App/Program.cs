@@ -15,14 +15,10 @@ using TgBitGetBot.Application.Services.Interfaces;
 using TgBitGetBot.Application.CommandRouter.Interface;
 using TgBitGetBot.Application.TelegramMessageListener.Interface;
 using TgBitGetBot.DataAccess.Repos.Interfaces;
-using TgBitGetBot.Application.Factories.Interface;
-using TgBitGetBot.Infrastructure.Factories;
-using Microsoft.Extensions.Logging;
-using System.ComponentModel;
 using TgBitGetBot.Application.Command.Interface;
 using TgBitGetBot.Infrastructure.Commands;
-using Microsoft.Extensions.Http;
 using TgBitGetBot.Domain.Consts;
+using TgBitGetBot.App.Extensions;
 
 var builder = new ConfigurationBuilder();
 BuildConfig(builder);
@@ -42,21 +38,38 @@ var host = Host.CreateDefaultBuilder()
 		});
 
 		services.AddAutoMapper(typeof(TickerDtoToModelProfile), typeof(DtoToEntitesProfile));
+		//services.AddDbContext<ApplicationDbContext>(opt =>
+		//{
+		//	opt.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection"));
+		//	//opt.UseSqlServer(context.Configuration.GetConnectionString("Docker"));
+		//});
 		services.AddDbContext<ApplicationDbContext>(opt =>
-			opt.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection")));
+		{
+			opt.UseNpgsql(context.Configuration.GetConnectionString("Postgres"));
+		});
 
 		services.AddTransient<ITickerService, TickerService>();
 		services.AddTransient<IUserService, UserService>();
+		services.AddTransient<IUserApiInfoService, UserApiInfoService>();
+		services.AddTransient<IUserStateService, UserStateService>();
+
 		services.AddTransient<IUserRepository, UserRepository>();
 		services.AddTransient<IUserStateRepository, UserStateRepository>();
-		services.AddTransient<ICommandRouter, CommandRouter>();
-		services.AddTransient<IUserApiInfoService, UserApiInfoService>();
+		services.AddScoped<ICommandRouter, CommandRouter>();
 		services.AddTransient<IUserApiInfoRepository, UserApiInfoRepository>();
+
 		services.AddSingleton<ITelegramMessageListener, TelegramMessageListener>();
-		services.AddTransient<ICommand, RegisterUserCommand>();
-		services.AddTransient<ICommand, UnRegisterUserCommand>();
-		services.AddTransient<ICommand, RegisterUserCommand>();
-		services.AddTransient<ICommand, GetTopTickersByDepthCommand>();
+		services.AddTelegramBotClient();
+
+		services.AddTransient<IKeyCommand, RegisterUserCommand>();
+		services.AddTransient<IKeyCommand, UnRegisterUserCommand>();
+		services.AddTransient<IKeyCommand, RegisterUserApiCommand>();
+		services.AddTransient<IKeyCommand, GetTopTickersByDepthCommand>();
+		services.AddTransient<IKeyCommand, DefaultCommand>();
+		services.AddTransient<IKeyCommand, ResetStateCommand>();
+
+		services.AddTransient<IStateCommand, UpdateUserApiTokenCommand>();
+		services.AddTransient<IStateCommand, UpdateUserApiPassphraceCommand>();
 
 		services.AddHttpClient(HttpClientConstNames.BitGetApiName, client =>
 		{
@@ -66,26 +79,22 @@ var host = Host.CreateDefaultBuilder()
 		services.AddHostedService<TopTickersWorker>();
 	})
 	.UseSerilog()
-	.Build();
+	.Build()
+	.MigrateDatabase<ApplicationDbContext>();
 
-//using (var scope = host.Services.CreateScope())
-//{
-//	var services = scope.ServiceProvider;
 
-//	var context = services.GetRequiredService<ApplicationDbContext>();
-//	if (context.Database.GetPendingMigrations().Any())
-//	{
-//		context.Database.Migrate();
-//	}
-//}
 
-await host.StartAsync().ConfigureAwait(false);
+await host.StartAsync()
+	.ConfigureAwait(false);
 
 var telegramMessageListener = host.Services.GetRequiredService<ITelegramMessageListener>();
 
 await telegramMessageListener.StartListening();
 
-await host.WaitForShutdownAsync().ConfigureAwait(false);
+await host.WaitForShutdownAsync()
+	.ConfigureAwait(false);
+
+
 
 
 static void BuildConfig(IConfigurationBuilder builder)

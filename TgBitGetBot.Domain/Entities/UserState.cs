@@ -2,14 +2,13 @@
 using System.ComponentModel.DataAnnotations;
 using TgBitGetBot.Domain.Enums;
 
-namespace TgBitGetBot.Domain.Entities
+namespace TgBitGetBot.Domain.Entities;
+
+public class UserState
 {
-	public class UserState
-	{
-		[Key]
-		[Column(Order = 0)]
-		public Guid Id { get; set; }
-        public long TelegramId { get; set; }
-        public TelegramDialogState State { get; set; }
-    }
+	[Key]
+	[Column(Order = 0)]
+	public Guid Id { get; set; }
+	public long TelegramId { get; set; }
+	public TelegramDialogState State { get; set; }
 }

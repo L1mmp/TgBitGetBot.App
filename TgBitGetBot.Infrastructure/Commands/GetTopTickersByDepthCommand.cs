@@ -10,11 +10,14 @@ using Telegram.Bot.Types;
 using TgBitGetBot.Application.Command.Interface;
 using TgBitGetBot.Application.Factories.Interface;
 using TgBitGetBot.Application.Services.Interfaces;
+using TgBitGetBot.Domain.Attributes;
+using TgBitGetBot.Domain.Consts;
 using TgBitGetBot.Infrastructure.Services;
 
 namespace TgBitGetBot.Infrastructure.Commands
 {
-	public class GetTopTickersByDepthCommand : ICommand
+	[CommandKey(CommandNames.GetTopTickersByDepthCommandName)]
+	public class GetTopTickersByDepthCommand : IKeyCommand
 	{
 		private readonly IEasyCachingProvider _provider;
 
@@ -22,20 +25,14 @@ namespace TgBitGetBot.Infrastructure.Commands
 		{
 			_provider = provider;
 		}
-		public async Task Execute(Message message, ITelegramBotClient botClient)
+		public async Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken ct = new())
 		{
-			using CancellationTokenSource cts = new();
 			var topString = await _provider.GetAsync<string>("topTickers");
 
 			var _message = await botClient.SendTextMessageAsync(
 				chatId: message.Chat.Id,
 				text: $"{topString}",
-				cancellationToken: cts.Token);
-		}
-
-		public Task UnExecute()
-		{
-			throw new NotImplementedException();
+				cancellationToken: ct);
 		}
 	}
 }

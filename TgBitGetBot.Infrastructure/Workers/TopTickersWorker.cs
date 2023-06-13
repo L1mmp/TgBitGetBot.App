@@ -33,7 +33,7 @@ namespace TgBitGetBot.Infrastructure.Workers
 			_schedule = CrontabSchedule.Parse(Schedule, new CrontabSchedule.ParseOptions { IncludingSeconds = true });
 			_nextRun = _schedule.GetNextOccurrence(DateTime.Now);
 			_logger = logger;
-			_cacheExpirationPeriodMin = options.Value.inmemory.DefaultLifetimeMin;
+			_cacheExpirationPeriodMin = options.Value.inmemory!.DefaultLifetimeMin;
 		}
 
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
