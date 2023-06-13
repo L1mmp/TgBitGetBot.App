@@ -32,6 +32,8 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
 
 		await _dbContext.SaveChangesAsync();
 
+		_dbContext.Entry(entity).State = EntityState.Detached;
+
 		return addedEntity;
 	}
 
@@ -56,12 +58,15 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
 
 	public async Task<TEntity> GetByIdAsync(Guid id)
 	{
-		return await _dbSet.FindAsync(id);
+		return (await _dbSet.FindAsync(id))!;
 	}
 
 	public async Task UpdateAsync(TEntity entity)
 	{
-		_dbContext.Entry(entity).State = EntityState.Modified;
+		_dbContext.ChangeTracker.Clear();
+		
+		_dbContext.Entry<TEntity>(entity).State = EntityState.Modified;
+
 		await _dbContext.SaveChangesAsync();
 	}
 

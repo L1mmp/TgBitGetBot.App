@@ -6,34 +6,50 @@ using TgBitGetBot.Domain.Enums;
 using TgBitGetBot.Application.Factories.Interface;
 using Microsoft.Extensions.DependencyInjection;
 using TgBitGetBot.Infrastructure.Services;
+using TgBitGetBot.Domain.Attributes;
+using TgBitGetBot.Domain.Consts;
+using TgBitGetBot.Domain.Dtos;
 
 namespace TgBitGetBot.Infrastructure.Commands
 {
-	internal class RegisterUserApiCommand : ICommand
+	[CommandKey(CommandNames.RegisterUserApiCommandName)]
+	public class RegisterUserApiCommand : IKeyCommand
 	{
 		private readonly IUserApiInfoService _userApiInfoService;
 		private readonly IUserStateService _userStateService;
+		private readonly IUserService _userService;
 
-		public RegisterUserApiCommand(IUserApiInfoService userApiInfoService, IUserStateService userStateService)
+		public RegisterUserApiCommand(IUserApiInfoService userApiInfoService, IUserStateService userStateService, IUserService userService)
 		{
 			_userApiInfoService = userApiInfoService;
 			_userStateService = userStateService;
+			_userService = userService;
 		}
 
-		public async Task Execute(Message message, ITelegramBotClient botClient)
+		public async Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken ct = new())
 		{
-			var _message = await botClient.SendTextMessageAsync(chatId: message.Chat.Id,
-				text: "Пожалуйста введите Token:");
+			var user = await _userService.GetUserByTelegramId(message.Chat.Id);
+			
 
-			await _userStateService.UpdateUserState(message.Chat.Id, TelegramDialogState.WaitingForToken);
-		}
+			var dto = new UserApiInfoDto()
+			{
+				UserId = user.Id,
+				CreatedOn = DateTime.UtcNow
+			};
 
-		public async Task UnExecute()
-		{
-			await Task.Run(() =>
-				{
-					throw new NotImplementedException();
-				});
+			var dbTask = _userApiInfoService.AddUserApiInfo(dto).ContinueWith(task =>
+			{
+				_userStateService.UpdateUserState(message.Chat.Id, TelegramDialogState.WaitingForToken);
+			}, ct);
+
+			await dbTask.ContinueWith(task =>
+			{
+				var _message = botClient.SendTextMessageAsync(
+					chatId: message.Chat.Id,
+					text: "Пожалуйста введите Token:",
+					cancellationToken: ct);
+			}, ct);
+
 		}
 	}
 }

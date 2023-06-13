@@ -24,7 +24,7 @@ public class UserService : IUserService
 	{
 		var user = _mapper.Map<User>(userDto);
 
-		if(!(await CheckIfUserExists(user)))
+		if (!(await CheckIfUserExists(user)))
 		{
 			try
 			{
@@ -45,6 +45,13 @@ public class UserService : IUserService
 		return false;
 	}
 
+	public async Task<User> GetUserByTelegramId(long id)
+	{
+		var entity = (await _userRepository.GetByConditionAsync(x => x.TelegramId == id)).FirstOrDefault();
+
+		return entity!;
+	}
+
 	public async ValueTask<bool> RemoveUserById(long Id)
 	{
 		var entityId = (await _userRepository.GetByConditionAsync(x => x.TelegramId == Id)).FirstOrDefault()?.Id;
@@ -54,12 +61,12 @@ public class UserService : IUserService
 			try
 			{
 				var deletedEntity = await _userRepository.DeleteByIdAsync(entityId.Value);
-				
+
 				return true;
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Error: {message}\nStack trace: {stackTrace}", ex.Message , ex.StackTrace);
+				_logger.LogError("Error: {message}\nStack trace: {stackTrace}", ex.Message, ex.StackTrace);
 
 				return false;
 			}

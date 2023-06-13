@@ -14,5 +14,5 @@ public class TickerRequsetDto
 	public long RequestTime { get; set; }
 
 	[JsonPropertyName("data")]
-	public List<TickerDto> Data { get; set; }
+	public List<TickerDto>? Data { get; set; }
 }

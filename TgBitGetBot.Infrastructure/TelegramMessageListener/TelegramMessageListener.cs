@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NCrontab;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
@@ -16,26 +17,20 @@ public class TelegramMessageListener : ITelegramMessageListener
 {
 	private readonly ILogger _logger;
 	private readonly ICommandRouter _router;
+	private readonly ITelegramBotClient _botClient;
 
 	public TelegramMessageListener(
 		ILoggerFactory loggerFactory,
-		ICommandRouter router)
+		ICommandRouter router,
+		ITelegramBotClient botClient)
 	{
 		_logger = loggerFactory.CreateLogger<TelegramMessageListener>();
 		_router = router;
+		_botClient = botClient;
 	}
 
 	public async Task StartListening()
 	{
-		var token = Environment.GetEnvironmentVariable("token");
-
-		if (token is null)
-		{
-			_logger.LogError("Token is not set in enviroment or incorrect");
-		}
-
-		var botClient = new TelegramBotClient(token!);
-
 		using CancellationTokenSource cts = new();
 
 		ReceiverOptions receiverOptions = new()
@@ -43,29 +38,34 @@ public class TelegramMessageListener : ITelegramMessageListener
 			AllowedUpdates = Array.Empty<UpdateType>()
 		};
 
-		botClient.StartReceiving(
+		_botClient.StartReceiving(
 		   updateHandler: HandleUpdateAsync,
 		   pollingErrorHandler: HandlePollingErrorAsync,
 		   receiverOptions: receiverOptions,
 		   cancellationToken: cts.Token
 	   );
 
-		var me = await botClient.GetMeAsync(cts.Token);
+		var me = await _botClient.GetMeAsync(cts.Token);
 
 		Console.WriteLine($"Start listening for @{me.Username}");
 		Console.ReadLine();
-
-		cts.Cancel();
 	}
 
 	public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
 	{
-		await _router.ExecuteCommand(update.Message!, botClient);
+		try
+		{
+			await _router.ExecuteCommand(update.Message!, botClient);
 
-		_logger.LogInformation("Received a '{text}' message in chat {chatId}.", 
-			update.Message!.Text, 
-			update.Message.Chat.Id);
-
+			_logger.LogInformation("Received a '{text}' message in chat {chatId}.",
+				update.Message!.Text,
+				update.Message.Chat.Id);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex.Message);
+			throw;
+		}
 	}
 
 	public Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)

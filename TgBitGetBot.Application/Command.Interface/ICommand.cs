@@ -6,7 +6,6 @@ namespace TgBitGetBot.Application.Command.Interface;
 
 public interface ICommand
 {
-	public abstract Task Execute(Message message, ITelegramBotClient botClient);
-	public abstract Task UnExecute();
+	public Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken ct = new());
 
 }

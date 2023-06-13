@@ -9,4 +9,5 @@ public class ApplicationDbContext : DbContext
 	{ }
 	public DbSet<User> Users { get; set; } = null!;
 	public DbSet<UserApiInfo> UserApiInfos { get; set; } = null!;
+	public DbSet<UserState> UserStates { get; set; } = null!;
 }

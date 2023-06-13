@@ -4,11 +4,14 @@ using Telegram.Bot.Types;
 using TgBitGetBot.Application.Command.Interface;
 using TgBitGetBot.Application.Factories.Interface;
 using TgBitGetBot.Application.Services.Interfaces;
+using TgBitGetBot.Domain.Attributes;
+using TgBitGetBot.Domain.Consts;
 using TgBitGetBot.Domain.Dtos;
 
 namespace TgBitGetBot.Infrastructure.Commands;
 
-public class RegisterUserCommand : ICommand
+[CommandKey(CommandNames.RegisterUserCommandName)]
+public class RegisterUserCommand : IKeyCommand
 {
 	private readonly IUserService _userService;
 	public RegisterUserCommand(IUserService userService)
@@ -16,9 +19,8 @@ public class RegisterUserCommand : ICommand
 		_userService = userService;
 	}
 
-	public  async Task Execute(Message message, ITelegramBotClient botClient)
+	public async Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken ct = new())
 	{
-		using CancellationTokenSource cts = new();
 		var user = new UserDto()
 		{
 			TelegramId = message.Chat.Id,
@@ -32,11 +34,6 @@ public class RegisterUserCommand : ICommand
 		var _message = await botClient.SendTextMessageAsync(
 			chatId: message.Chat.Id,
 			text: sendMessage,
-			cancellationToken: cts.Token);
-	}
-
-	public Task UnExecute()
-	{
-		throw new NotImplementedException();
+			cancellationToken: ct);
 	}
 }

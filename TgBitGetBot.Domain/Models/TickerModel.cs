@@ -2,7 +2,7 @@
 
 public class TickerModel
 {
-	public string Symbol { get; set; }
+	public string? Symbol { get; set; }
 	public decimal High24h { get; set; }
 	public decimal Low24h { get; set; }
 	public decimal Close { get; set; }
