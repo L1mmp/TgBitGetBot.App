@@ -1,18 +1,9 @@
 ﻿using EasyCaching.Core;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using TgBitGetBot.Application.Command.Interface;
-using TgBitGetBot.Application.Factories.Interface;
-using TgBitGetBot.Application.Services.Interfaces;
 using TgBitGetBot.Domain.Attributes;
 using TgBitGetBot.Domain.Consts;
-using TgBitGetBot.Infrastructure.Services;
 
 namespace TgBitGetBot.Infrastructure.Commands
 {

@@ -1,14 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using NCrontab;
+﻿using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TgBitGetBot.Application.CommandRouter.Interface;
-using TgBitGetBot.Application.Services.Interfaces;
 using TgBitGetBot.Application.TelegramMessageListener.Interface;
 
 namespace TgBitGetBot.Infrastructure.TelegramMessageListener;
@@ -55,10 +51,10 @@ public class TelegramMessageListener : ITelegramMessageListener
 	{
 		try
 		{
-			await _router.ExecuteCommand(update.Message!, botClient);
+			await _router.ExecuteCommand(update.Message, botClient);
 
 			_logger.LogInformation("Received a '{text}' message in chat {chatId}.",
-				update.Message!.Text,
+				update.Message.Text,
 				update.Message.Chat.Id);
 		}
 		catch (Exception ex)

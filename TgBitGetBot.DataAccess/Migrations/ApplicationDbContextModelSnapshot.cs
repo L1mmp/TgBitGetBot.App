@@ -17,10 +17,9 @@ namespace TgBitGetBot.DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
-
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("TgBitGetBot.Domain.Entities.User", b =>
                 {
@@ -37,7 +36,7 @@ namespace TgBitGetBot.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("TgBitGetBot.Domain.Entities.UserApiInfo", b =>
@@ -63,7 +62,7 @@ namespace TgBitGetBot.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserApiInfos");
+                    b.ToTable("UserApiInfos", (string)null);
                 });
 
             modelBuilder.Entity("TgBitGetBot.Domain.Entities.UserState", b =>
@@ -81,7 +80,7 @@ namespace TgBitGetBot.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserStates");
+                    b.ToTable("UserStates", (string)null);
                 });
 
             modelBuilder.Entity("TgBitGetBot.Domain.Entities.UserApiInfo", b =>

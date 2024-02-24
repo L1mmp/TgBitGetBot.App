@@ -6,7 +6,7 @@ namespace TgBitGetBot.Domain.Entities;
 public class UserApiInfo
 {
 	[Key]
-	[Column(Order = 0)]	
+	[Column(Order = 0)]
 	public Guid Id { get; set; }
 	public string? Token { get; set; }
 	public string? Passphrase { get; set; }

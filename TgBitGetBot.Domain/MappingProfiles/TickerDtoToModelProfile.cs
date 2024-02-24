@@ -1,7 +1,6 @@
-﻿using System.Globalization;
-using AutoMapper;
+﻿using AutoMapper;
+using System.Globalization;
 using TgBitGetBot.Domain.Dtos;
-using TgBitGetBot.Domain.Entities;
 using TgBitGetBot.Domain.Models;
 
 namespace TgBitGetBot.Domain.MappingProfiles;

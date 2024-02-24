@@ -5,13 +5,15 @@ using Microsoft.Extensions.Options;
 using NCrontab;
 using TgBitGetBot.Application.Services.Interfaces;
 using TgBitGetBot.Domain.Confgis;
+using TgBitGetBot.Infrastructure.Services;
 
 namespace TgBitGetBot.Infrastructure.Workers
 {
-	public class TopTickersWorker : BackgroundService
+	public class TickerChangeTrackerWorker : BackgroundService
 	{
-		private static string Schedule => "*/10 * * * * *"; //Runs every 10 seconds
+		private static string Schedule => "*/1 * * * * *"; //Runs every 10 seconds
 		private readonly ITickerService _tickerService;
+		private readonly TickerChangeTrackerService _tickerChangeTrackerService;
 		private readonly IEasyCachingProvider _cacheProvider;
 		private readonly ILogger<TopTickersWorker> _logger;
 		private readonly CrontabSchedule _schedule;
@@ -22,7 +24,7 @@ namespace TgBitGetBot.Infrastructure.Workers
 		/// </summary>
 		private readonly int _cacheExpirationPeriodMin;
 
-		public TopTickersWorker(
+		public TickerChangeTrackerWorker(
 			ITickerService tickerService,
 			IEasyCachingProvider provider,
 			ILogger<TopTickersWorker> logger,
@@ -41,7 +43,9 @@ namespace TgBitGetBot.Infrastructure.Workers
 			do
 			{
 				var now = DateTime.Now;
-				var nextrun = _schedule.GetNextOccurrence(now);
+
+				_nextRun = _schedule.GetNextOccurrence(now);
+
 				if (now > _nextRun)
 				{
 					await Process();
@@ -55,16 +59,16 @@ namespace TgBitGetBot.Infrastructure.Workers
 		private async Task Process()
 		{
 
-			var topTickers = await _tickerService.GetTopTickers();
+			var tickersInfo = await _tickerService.GetTickersInfo();
+
+			var tickersChanged = await _tickerChangeTrackerService.GetTickersChanged(tickersInfo);
+			// Get tickers info changed
+			// Call UserNotify service (Tickers)
+			// Notifies users.
 
 			try
 			{
-				await _cacheProvider.SetAsync<string>(
-					"topTickers",
-					topTickers,
-					TimeSpan.FromMinutes(_cacheExpirationPeriodMin)
-					);
-				_logger.LogInformation(topTickers);
+
 			}
 			catch (Exception ex)
 			{

@@ -1,16 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Telegram.Bot;
+using TgBitGetBot.Application.Services.Interfaces;
+using TgBitGetBot.Infrastructure.Services;
 
 namespace TgBitGetBot.App.Extensions
 {
-	public static class ServiceCollectionExtensions
+	public static partial class ServiceCollectionExtensions
 	{
 		public static IServiceCollection AddTelegramBotClient(this IServiceCollection serviceCollection)
 		{
@@ -21,10 +17,20 @@ namespace TgBitGetBot.App.Extensions
 				Log.Error("Token is not set in enviroment or incorrect");
 			}
 
-			var client = new TelegramBotClient(Environment.GetEnvironmentVariable("token")!);
+			var client = new TelegramBotClient(Environment.GetEnvironmentVariable("token"));
 
 			return serviceCollection
 				.AddTransient<ITelegramBotClient>(x => client);
+		}
+
+		public static IServiceCollection AddServices(this IServiceCollection services)
+		{
+			services.AddTransient<ITickerService, TickerService>();
+			services.AddTransient<IUserService, UserService>();
+			services.AddTransient<IUserApiInfoService, UserApiInfoService>();
+			services.AddTransient<IUserStateService, UserStateService>();
+
+			return services;
 		}
 	}
 }
