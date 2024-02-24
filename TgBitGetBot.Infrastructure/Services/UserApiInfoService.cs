@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
-using System.Security.Cryptography.X509Certificates;
-using Telegram.Bot.Requests;
-using Telegram.Bot.Types;
 using TgBitGetBot.Application.Services.Interfaces;
-using TgBitGetBot.DataAccess.Repos;
 using TgBitGetBot.DataAccess.Repos.Interfaces;
 using TgBitGetBot.Domain.Dtos;
 using TgBitGetBot.Domain.Entities;
@@ -26,11 +21,6 @@ public class UserApiInfoService : IUserApiInfoService
 	}
 	public async Task<bool> AddUserApiInfo(UserApiInfoDto userApiInfo)
 	{
-		//if (await CheckIsUserApiInfoExists(userApiInfo.Token))
-		//{
-		//	return false;
-		//}
-
 		try
 		{
 			var result = await _userApiInfoRepository.AddAsync(_mapper.Map<UserApiInfo>(userApiInfo));
@@ -91,7 +81,10 @@ public class UserApiInfoService : IUserApiInfoService
 
 	public async Task<UserApiInfo> GetUserApiInfoByUserTelegramId(long userId)
 	{
-		var entity = (await _userApiInfoRepository.GetWithIncludeAsync(x => x.User!)).Where(x => x.User!.TelegramId == userId).FirstOrDefault();
+		var entity = (await _userApiInfoRepository
+			.GetWithIncludeAsync(x => x.User!))
+			.Where(x => x.User!.TelegramId == userId)
+			.FirstOrDefault();
 
 		return entity!;
 	}

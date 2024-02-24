@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using TgBitGetBot.Application.Command.Interface;
-using TgBitGetBot.Application.Factories.Interface;
 using TgBitGetBot.Application.Services.Interfaces;
 using TgBitGetBot.Domain.Attributes;
 using TgBitGetBot.Domain.Consts;

@@ -10,7 +10,7 @@ services:
     depends_on:
       - db
     environment:
-      - token=5835418871:AAFOu-QztCkR0dqqR5RsnoVWxBtmnSMvFEU
+      - token=5835418871:AAHF74A0PJnYgjcurptJNMkHsBeRiY6oYnI
     networks:
       - app
     ports:

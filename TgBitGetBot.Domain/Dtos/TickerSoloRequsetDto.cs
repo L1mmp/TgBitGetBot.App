@@ -4,8 +4,8 @@ namespace TgBitGetBot.Domain.Dtos;
 
 public class TickerSoloRequsetDto
 {
-    [JsonPropertyName("code")]
-    public string? Code { get; set; }
+	[JsonPropertyName("code")]
+	public string? Code { get; set; }
 
 	[JsonPropertyName("msg")]
 	public string? Msg { get; set; }

@@ -1,6 +1,6 @@
-﻿using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Linq.Expressions;
 using TgBitGetBot.DataAccess.Repos.Interfaces;
 
 namespace TgBitGetBot.DataAccess.Repos;
@@ -23,10 +23,7 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
 
 	public async Task<EntityEntry<TEntity>> AddAsync(TEntity entity)
 	{
-		if (entity == null)
-		{
-			throw new ArgumentNullException("Entity must be not null");
-		}
+		ArgumentNullException.ThrowIfNull(nameof(entity));
 
 		var addedEntity = await _dbSet.AddAsync(entity);
 
@@ -64,7 +61,7 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
 	public async Task UpdateAsync(TEntity entity)
 	{
 		_dbContext.ChangeTracker.Clear();
-		
+
 		_dbContext.Entry<TEntity>(entity).State = EntityState.Modified;
 
 		await _dbContext.SaveChangesAsync();
@@ -90,23 +87,6 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
 
 	public async Task<IEnumerable<TEntity>> GetWithIncludeAsync(params Expression<Func<TEntity, object>>[] includeProperties)
 	{
-		return await (await IncludeAsync(includeProperties)).ToListAsync();
-	}
-
-	public async Task<IEnumerable<TEntity>> GetWithIncludeAsync(Func<TEntity, bool> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
-	{
-		var query = await IncludeAsync(includeProperties);
-
-		return query.Where(predicate).ToList();
-	}
-
-	public async Task<IQueryable<TEntity>> IncludeAsync(params Expression<Func<TEntity, object>>[] includeProperties)
-	{
-		IQueryable<TEntity> query = _dbSet.AsNoTracking();
-
-		return await Task.Run(() =>
-		{
-			return includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
-		});
+		return await (Include(includeProperties)).ToListAsync();
 	}
 }

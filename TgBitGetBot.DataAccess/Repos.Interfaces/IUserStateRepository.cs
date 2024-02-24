@@ -2,7 +2,7 @@
 
 namespace TgBitGetBot.DataAccess.Repos.Interfaces
 {
-    public interface IUserStateRepository : IBaseRepository<UserState>
-    {
-    }
+	public interface IUserStateRepository : IBaseRepository<UserState>
+	{
+	}
 }

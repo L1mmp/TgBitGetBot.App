@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 using TgBitGetBot.Application.Command.Interface;
 using TgBitGetBot.Application.Services.Interfaces;
 using TgBitGetBot.Domain.Attributes;
-using TgBitGetBot.Domain.Dtos;
+using TgBitGetBot.Domain.Consts;
 using TgBitGetBot.Domain.Enums;
-using TgBitGetBot.Infrastructure.Services;
 
 namespace TgBitGetBot.Infrastructure.Commands
 {
@@ -39,11 +34,26 @@ namespace TgBitGetBot.Infrastructure.Commands
 				_userStateService.UpdateUserState(message.Chat.Id, TelegramDialogState.DefaultSatate);
 			}, ct);
 
+
+			var keyboard = new ReplyKeyboardMarkup("")
+			{
+				Keyboard = new[]
+				{
+					new[]
+					{
+						new KeyboardButton(CommandNames.RegisterUserApiCommandName),
+						new KeyboardButton(CommandNames.GetTopTickersByDepthCommandName),
+						new KeyboardButton(CommandNames.UnRegisterUserCommandName)
+					}
+				}
+			};
+
 			await dbTask.ContinueWith(task =>
 			{
 				var _message = botClient.SendTextMessageAsync(
 					chatId: message.Chat.Id,
 					text: "API успешно добавлено!",
+					replyMarkup: keyboard,
 					cancellationToken: ct);
 			}, ct);
 		}

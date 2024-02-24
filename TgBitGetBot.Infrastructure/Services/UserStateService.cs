@@ -26,7 +26,7 @@ namespace TgBitGetBot.Infrastructure.Services
 			var entities = await _stateRepository.GetByConditionAsync(x => x.TelegramId == telegramId);
 			if (!entities.Any())
 			{
-				await _stateRepository.AddAsync(new () { State = state, TelegramId = telegramId });
+				await _stateRepository.AddAsync(new() { State = state, TelegramId = telegramId });
 			}
 			else
 			{

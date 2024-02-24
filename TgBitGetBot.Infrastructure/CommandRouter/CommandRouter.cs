@@ -1,25 +1,15 @@
-﻿using EasyCaching.Core;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+﻿using Microsoft.Extensions.Logging;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using TgBitGetBot.Application.Command.Interface;
 using TgBitGetBot.Application.CommandRouter.Interface;
-using TgBitGetBot.Application.Factories.Interface;
 using TgBitGetBot.Application.Services.Interfaces;
 using TgBitGetBot.Domain.Attributes;
 using TgBitGetBot.Domain.Consts;
 using TgBitGetBot.Domain.Entities;
 using TgBitGetBot.Domain.Enums;
 using TgBitGetBot.Infrastructure.Commands;
-using TgBitGetBot.Infrastructure.Factories;
 
 namespace TgBitGetBot.Infrastructure.CommandRouter
 {
@@ -31,14 +21,14 @@ namespace TgBitGetBot.Infrastructure.CommandRouter
 		private readonly Dictionary<TelegramDialogState, IStateCommand> _commandStateMap = new()!;
 		private readonly IUserStateService _userStateService;
 		private readonly ILogger _logger;
-
+		private readonly IUserService _userService;
 
 		public CommandRouter(
 			IEnumerable<IKeyCommand> keyCommandsImpls,
 			IEnumerable<IStateCommand> stateCommandsImpls,
-			IUserStateService userStateService
-,
-			ILoggerFactory loggerFactory)
+			IUserStateService userStateService,
+			ILoggerFactory loggerFactory,
+			IUserService userService)
 		{
 			_keyCommandsImpls = keyCommandsImpls;
 			_stateCommandsImpls = stateCommandsImpls;
@@ -74,12 +64,21 @@ namespace TgBitGetBot.Infrastructure.CommandRouter
 			}
 
 			_logger = loggerFactory.CreateLogger<CommandRouter>();
+			_userService = userService;
 		}
 
 		public async Task ExecuteCommand(Message message, ITelegramBotClient botClient)
 		{
 			try
 			{
+				var user = await _userService.GetUserByTelegramId(message.Chat.Id);
+
+				if (user == null && message.Text != CommandNames.RegisterUserCommandName)
+				{
+					await _keyCommandsImpls.FirstOrDefault(x => x.GetType() == typeof(NeedToRegisterUserCommand))!.ExecuteAsync(message, botClient);
+					return;
+				}
+
 				var userState = await _userStateService.GetCurrentStateOfUser(message.Chat.Id);
 
 				if (userState is default(UserState) || message.Text == CommandNames.ResetCommandName)

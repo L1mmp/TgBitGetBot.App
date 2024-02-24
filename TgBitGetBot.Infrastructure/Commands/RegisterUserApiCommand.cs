@@ -1,14 +1,11 @@
-﻿using Telegram.Bot.Types;
-using Telegram.Bot;
+﻿using Telegram.Bot;
+using Telegram.Bot.Types;
 using TgBitGetBot.Application.Command.Interface;
 using TgBitGetBot.Application.Services.Interfaces;
-using TgBitGetBot.Domain.Enums;
-using TgBitGetBot.Application.Factories.Interface;
-using Microsoft.Extensions.DependencyInjection;
-using TgBitGetBot.Infrastructure.Services;
 using TgBitGetBot.Domain.Attributes;
 using TgBitGetBot.Domain.Consts;
 using TgBitGetBot.Domain.Dtos;
+using TgBitGetBot.Domain.Enums;
 
 namespace TgBitGetBot.Infrastructure.Commands
 {
@@ -29,7 +26,7 @@ namespace TgBitGetBot.Infrastructure.Commands
 		public async Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken ct = new())
 		{
 			var user = await _userService.GetUserByTelegramId(message.Chat.Id);
-			
+
 
 			var dto = new UserApiInfoDto()
 			{
@@ -37,19 +34,14 @@ namespace TgBitGetBot.Infrastructure.Commands
 				CreatedOn = DateTime.UtcNow
 			};
 
-			var dbTask = _userApiInfoService.AddUserApiInfo(dto).ContinueWith(task =>
-			{
-				_userStateService.UpdateUserState(message.Chat.Id, TelegramDialogState.WaitingForToken);
-			}, ct);
+			await _userApiInfoService.AddUserApiInfo(dto);
 
-			await dbTask.ContinueWith(task =>
-			{
-				var _message = botClient.SendTextMessageAsync(
-					chatId: message.Chat.Id,
-					text: "Пожалуйста введите Token:",
-					cancellationToken: ct);
-			}, ct);
+			await _userStateService.UpdateUserState(message.Chat.Id, TelegramDialogState.WaitingForToken);
 
+			await botClient.SendTextMessageAsync(
+				chatId: message.Chat.Id,
+				text: "Пожалуйста введите Token:",
+				cancellationToken: ct);
 		}
 	}
 }
